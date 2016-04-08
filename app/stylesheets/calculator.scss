@@ -1,0 +1,68 @@
+$whole-width: 240px;
+$button-width: $whole-width / 4;
+
+@mixin key {
+  display: inline-block;
+  border-right: 1px solid #8E8E8E;
+  border-bottom: 1px solid #8E8E8E;
+  width: $button-width - 1;
+  height: 47px;
+  font-size: 22px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: $button-width - 1;
+}
+.calculator {
+  width: $whole-width;
+
+  .monitor {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    background: black;
+    opacity: 0.8;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    color: #FFF;
+
+    .value {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 42px;
+    }
+  }
+
+  .keyboard {
+    width: 100%;
+
+    .main-keyboard {
+      display: inline-block;
+      width: ($whole-width / 4) * 3;
+      float: left;
+
+      .key {
+        @include key;
+        background-color: #E0E1E0;
+        &.long-key {
+          width: ($button-width * 2) - 1;
+        }
+        &:active {
+          background-color: darken(#E0E1E0, 15%);
+        }
+      }
+
+    }
+    .ops-keyboard {
+      display: inline-block;
+      width: ($whole-width / 4);
+      margin-left: 0px;
+      .key {
+        @include key;
+        &.op {
+          background-color: #E99748;
+        }
+      }
+    }
+  }
+}
