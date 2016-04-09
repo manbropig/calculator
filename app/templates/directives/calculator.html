@@ -4,27 +4,11 @@
   </div>
   <div class="keyboard">
     <div class="main-keyboard">
-
-      <div class="key"
-        ng-repeat="key in topKeys"
-        ng-click="buttonClicked(key)">
-        {{key.display}}
-      </div>
-      <div class="key"
-        ng-repeat="key in numKeys"
-        ng-click="buttonClicked(key)"
-        ng-class="{'long-key': key.display == '0'}">
-        {{key.display}}
-      </div>
-
+      <calculator-key ng-repeat="key in modKeys" key="key"></calculator-key>
+      <calculator-key ng-repeat="key in numKeys" key="key"></calculator-key>
     </div>
     <div class="ops-keyboard">
-      <div class="key op"
-        ng-repeat="key in opsKeys"
-        ng-click="buttonClicked(key)">
-        {{key.display}}
-      </div>
+      <calculator-key ng-repeat="key in opsKeys" key="key"></calculator-key>
     </div>
-    <!-- <div calculator-key ng-repeat="key in keys"></div> -->
   </div>
 </div>
