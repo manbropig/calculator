@@ -1,16 +1,22 @@
 $whole-width: 240px;
 $button-width: $whole-width / 4;
+$button-height: 47px;
+
+body {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+}
 
 @mixin key {
   display: inline-block;
   border-right: 1px solid #8E8E8E;
   border-bottom: 1px solid #8E8E8E;
   width: $button-width - 1;
-  height: 47px;
+  height: $button-height;
+  line-height: $button-height;
   font-size: 22px;
   text-align: center;
   vertical-align: middle;
-  line-height: $button-width - 1;
 }
 .calculator {
   width: $whole-width;
@@ -57,10 +63,14 @@ $button-width: $whole-width / 4;
       display: inline-block;
       width: ($whole-width / 4);
       margin-left: 0px;
+      color: #FFF;
+
       .key {
         @include key;
-        &.op {
-          background-color: #E99748;
+        background-color: #e97607;
+        &:active {
+          background-color: darken(#E99748, 15%);
+          color: #8E8E8E;
         }
       }
     }
