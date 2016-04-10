@@ -11,6 +11,8 @@ app.directive('webCalc', ['Calculator', 'Symbols', function(Calculator, Symbols)
         * = button repeats last op √
       */
       var calculator = new Calculator();
+      var defaultFontSize = 42;
+      scope.monitorStyle = { 'font-size': defaultFontSize + 'px' };
       scope.monitorValue = 0;
 
       scope.numKeys = Symbols.numbers;
@@ -21,12 +23,25 @@ app.directive('webCalc', ['Calculator', 'Symbols', function(Calculator, Symbols)
       scope.$on('clicked', function(event, key) {
         var result = calculator.process(key);
         scope.monitorValue = (result === '') ? scope.monitorValue : result;
+        scope.monitorValue = scope.monitorValue.toString();
 
         if (key.keyType === 'number') {
           scope.$broadcast('key.change', 'C');
         } else if (key.value === 'AC') {
           scope.$broadcast('key.change', 'AC');
         }
+      });
+
+      //decrease font size for large numbers
+      scope.$watch('monitorValue.length', function(newValue) {
+        //TODO: this can be better
+        var fontSize = defaultFontSize;
+        if (newValue > 9 && newValue < 14) {
+          fontSize = defaultFontSize - ((newValue - 9) * 3);
+        } else if (newValue >= 14) {
+          fontSize = 28 - ((newValue - 14) * 3);
+        }
+        scope.monitorStyle = { 'font-size': fontSize + 'px' };
       });
     }
   }
