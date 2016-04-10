@@ -7,9 +7,8 @@ app.directive('webCalc', ['Calculator', 'Symbols', function(Calculator, Symbols)
     link: function(scope, elem, attrs) {
       /*  things to remember:
         * smaller font size as numbers get large
-        * doing long operations - heavier logic
         * AC/C button
-        * = button repeats last op
+        * = button repeats last op √
       */
       var calculator = new Calculator();
       scope.monitorValue = 0;

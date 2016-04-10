@@ -29,6 +29,22 @@ app.factory('Calculator', ['Symbols', function(Symbols) {
     return this.currNum;
   }
 
+  Calculator.prototype.processDecimal = function() {
+    if (this.newNumberPhase) {
+      this.newNumberPhase = false;
+      this.currNum = '0.';
+      this.currCalc += '.';
+    } else {
+      this.currNum = this.currNum.toString();
+      var idx = this.currNum.indexOf('.');
+      if (idx === -1) {
+        this.currNum += '.';
+        this.currCalc += '.';
+      }
+    }
+    return this.currNum;
+  }
+
   //TODO: make this less hard to read!
   Calculator.prototype.processOp = function(op) {
     this.newNumberPhase = true;
