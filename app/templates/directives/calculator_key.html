@@ -2,5 +2,5 @@
   <span ng-switch-when="number">{{key.value}}</span>
   <span ng-switch-when="decimal">.</span>
   <span ng-switch-when="modifier" ng-bind-html="display"></span>
-  <span ng-switch-when="operation" ng-bind-html="display"></span>
+  <span ng-switch-default ng-bind-html="display"></span>
 </div>

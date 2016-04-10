@@ -12,7 +12,6 @@ app.directive('webCalc', ['Calculator', 'Symbols', function(Calculator, Symbols)
         * = button repeats last op
       */
       var calculator = new Calculator();
-      var currentCalc = 0;
       scope.monitorValue = 0;
 
       scope.numKeys = Symbols.numbers;
@@ -22,8 +21,10 @@ app.directive('webCalc', ['Calculator', 'Symbols', function(Calculator, Symbols)
 
       scope.$on('clicked', function(event, key) {
         console.log(key);
+        //make this accept 0
+        var result = calculator.process(key);
+        scope.monitorValue = (result === '') ? scope.monitorValue : result;
       });
-      
     }
   }
 }]);
