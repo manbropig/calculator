@@ -69,8 +69,9 @@ module.exports = function(grunt) {
         files: [
           'https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.1/angular.min.js',
           'node_modules/angular-mocks/angular-mocks.js',
-          'test/**/*.js',
-          'app/angular/**/*.js'
+          'app/angular/**/*.js',
+          'test/lib/*.js',
+          'test/**/*.js'
         ]
       },
       test: {},
