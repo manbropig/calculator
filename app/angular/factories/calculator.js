@@ -1,7 +1,7 @@
 app.factory('Calculator', ['Symbols', function(Symbols) {
 
   function Calculator() {
-    this.nextOp = null;
+    this.nextOp = null; //TODO: check if this is needed
     this.currNum = '';
     this.currCalc = '';
     this.lastCalc = null;

@@ -61,7 +61,27 @@ module.exports = function(grunt) {
         }
       }
     },
-
+    // Test settings
+    karma: {
+      options: {
+        configFile: 'karma.conf.js',
+        singleRun: true,
+        files: [
+          'https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.1/angular.min.js',
+          'node_modules/angular-mocks/angular-mocks.js',
+          'test/**/*.js',
+          'app/angular/**/*.js'
+        ]
+      },
+      test: {},
+      watch: {
+        options: {
+          singleRun: false,
+          autoWatch: true,
+          reporters: ['super-dots', 'mocha', 'osx']
+        }
+      }
+    },
     concurrent: {
       options: {
         logConcurrentOutput: true
@@ -110,6 +130,41 @@ module.exports = function(grunt) {
 
   });
 
+  grunt.registerTask('test', [], function() {
+  var optFile = grunt.option('file');
+  var browser = grunt.option('browser');
+  var files   = grunt.config.get('karma.options.files');
+
+  if (optFile) {
+    // If not in test/spec, rewrite path to what we expect it to be
+    if (/test\/spec/.test(optFile) !== true) {
+      var newPath = optFile.replace(/app\/angular/, 'test/spec').replace(/\.js/, '_spec.js');
+
+      var newPathStats = fs.statSync(newPath);
+
+      if (newPathStats.isFile()) {
+        optFile = newPath;
+      }
+    }
+
+    var fileStats = fs.statSync(optFile);
+
+    if (!fileStats.isFile()) {
+      throw "Bad file path.";
+    }
+
+    files.splice(files.indexOf('test/spec/**/*.js'), 1, optFile);
+  }
+
+  if (browser) {
+    grunt.config.set('karma.test.options.browsers', [browser]);
+  }
+
+  grunt.config.set('karma.test.options.files', files);
+
+  grunt.task.run('karma:test');
+});
+
   // ** default grunt behaviour **
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.registerTask('default', [
@@ -118,4 +173,6 @@ module.exports = function(grunt) {
   ]);
 
   grunt.loadNpmTasks('grunt-concurrent');
+
+  grunt.loadNpmTasks('grunt-karma');
 };
