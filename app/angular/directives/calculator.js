@@ -21,6 +21,12 @@ app.directive('webCalc', ['Calculator', 'Symbols', function(Calculator, Symbols)
       scope.$on('clicked', function(event, key) {
         var result = calculator.process(key);
         scope.monitorValue = (result === '') ? scope.monitorValue : result;
+
+        if (key.keyType === 'number') {
+          scope.$broadcast('key.change', 'C');
+        } else if (key.value === 'AC') {
+          scope.$broadcast('key.change', 'AC');
+        }
       });
     }
   }

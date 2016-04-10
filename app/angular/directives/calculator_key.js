@@ -16,6 +16,13 @@ app.directive('calculatorKey', ['$sce', 'Symbols', function($sce, Symbols) {
           '%': $sce.trustAsHtml('%'),
           '+/-': $sce.trustAsHtml('&plusmn;')
         }[scope.key.value];
+
+        if (scope.key.value === 'AC') {
+          scope.$on('key.change', function(event, changeTo) {
+            scope.display = $sce.trustAsHtml(changeTo);
+          });
+        }
+
       } else if (scope.key.keyType === 'operation') {
         scope.display = {
           'x': $sce.trustAsHtml('x'),

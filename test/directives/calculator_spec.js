@@ -94,7 +94,6 @@ describe('Factory: Calculator', function() {
   describe('Modifiers', function() {
 
     describe('AC', function() {
-
       it('resets the calculator', function() {
         calculator.process({value: '2', keyType: 'number'});
         calculator.process({value: 'AC', keyType: 'modifier'});
@@ -102,6 +101,26 @@ describe('Factory: Calculator', function() {
         expect(calculator.currCalc).toEqual('');
         expect(calculator.lastCalc).toBeNull();
         expect(calculator.newNumberPhase).toEqual(true);
+      });
+    });
+
+    describe('+/-', function() {
+      it('negates the current value', function() {
+        calculator.process({value: '2', keyType: 'number'});
+        calculator.process({value: '+/-', keyType: 'modifier'});
+        expect(calculator.currNum).toEqual(-2);
+        expect(calculator.currCalc).toEqual(-2);
+        calculator.process({value: '+/-', keyType: 'modifier'});
+        expect(calculator.currNum).toEqual(2);
+        expect(calculator.currCalc).toEqual(2);
+      });
+    });
+
+    describe('%', function() {
+      it('divides the current value by 100', function() {
+        calculator.process({value: '2', keyType: 'number'});
+        calculator.process({value: '%', keyType: 'modifier'});
+        expect(calculator.currNum).toEqual(0.02);
       });
     });
   });

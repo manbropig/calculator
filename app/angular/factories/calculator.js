@@ -49,11 +49,13 @@ app.factory('Calculator', ['Symbols', function(Symbols) {
     this.newNumberPhase = true;
     Symbols.OPS_REGEX.lastIndex = 0; //reset regex
     var match = Symbols.OPS_REGEX.exec(this.currCalc);
+    this.currCalc = this.currCalc.toString();
 
     if (op !== '=') {
       op = (op === 'x') ? '*' : op;
       this.lastCalc = null;
       if (match) { //check if currCalc already has an ops-sign in it
+
         if (match.index === this.currCalc.length - 1) {
           this.currCalc = this.currCalc.substr(0, this.currCalc.length - 1) + op;
         } else {
@@ -61,19 +63,21 @@ app.factory('Calculator', ['Symbols', function(Symbols) {
           this.currCalc = this.currNum + op;  //into 5+1
           return this.currNum; //return 5
         }
+
       } else {
         this.currCalc = this.currNum + op;
       }
-    } else {
+
+    } else { //op === '='
+
       if (this.lastCalc) {
         this.currCalc = this.currNum + this.lastCalc;
-      } else {
-        //split currCalc from regex match
+      } else { //split currCalc from regex match
         this.lastCalc = this.currCalc.substr(this.currCalc.indexOf(match[0]), this.currCalc.length - 1);
       }
 
     }
-    this.currCalc = this.currCalc.toString().replace(/x/g, '*').replace(/[^-()\d\/*+.]/g, '');
+    this.currCalc = this.currCalc.replace(/x/g, '*').replace(/[^-()\d\/*+.]/g, '');
     try { //try to do a calculation
       this.currNum = eval(this.currCalc);
     } catch (e) {
@@ -82,15 +86,29 @@ app.factory('Calculator', ['Symbols', function(Symbols) {
     return this.currNum;
   }
 
-  Calculator.prototype.processMod = function() {
-    return this.allClear();
+  Calculator.prototype.processMod = function(mod) {
+    var result;
+    if (mod === 'AC') {
+      result = this.allClear();
+    } else if (mod === 'C') {
+      result = this.clear();
+    } else if (mod === '+/-') {
+      result = this.negate();
+    } else { //%
+      result = this.percent();
+    }
+    return result;
   }
 
   Calculator.prototype.negate = function() {
-    return this.currNum *= (-1);
+    this.currNum *= (-1);
+    this.currCalc = this.currNum;
+    return this.currNum;
   }
   Calculator.prototype.percent = function() {
-    return this.currNum /= 100;
+    this.currNum /= 100;
+    this.currCalc = this.currNum;
+    return this.currNum;
   }
   Calculator.prototype.clear = function() {}
   Calculator.prototype.allClear = function() {
