@@ -94,7 +94,7 @@ describe('Factory: Calculator', function() {
   describe('Modifiers', function() {
 
     describe('AC', function() {
-
+      
       it('resets the calculator', function() {
         calculator.process({value: '2', keyType: 'number'});
         calculator.process({value: 'AC', keyType: 'modifier'});

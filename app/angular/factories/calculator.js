@@ -1,7 +1,6 @@
 app.factory('Calculator', ['Symbols', function(Symbols) {
 
   function Calculator() {
-    this.nextOp = null; //TODO: check if this is needed
     this.currNum = '';
     this.currCalc = '';
     this.lastCalc = null;
@@ -48,7 +47,6 @@ app.factory('Calculator', ['Symbols', function(Symbols) {
   //TODO: make this less hard to read!
   Calculator.prototype.processOp = function(op) {
     this.newNumberPhase = true;
-    this.nextOp = op;
     Symbols.OPS_REGEX.lastIndex = 0; //reset regex
     var match = Symbols.OPS_REGEX.exec(this.currCalc);
 
