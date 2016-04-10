@@ -20,8 +20,6 @@ app.directive('webCalc', ['Calculator', 'Symbols', function(Calculator, Symbols)
       scope.numKeys.push(Symbols.decimal); //to render properly in ng-repeat
 
       scope.$on('clicked', function(event, key) {
-        console.log(key);
-        //make this accept 0
         var result = calculator.process(key);
         scope.monitorValue = (result === '') ? scope.monitorValue : result;
       });

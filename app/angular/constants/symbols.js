@@ -8,5 +8,6 @@ app.constant('Symbols', {
   operations: '/x-+='.split('').map(function(num) {
     return { value: num, keyType: 'operation' };
   }),
-  decimal:  { value: '.', keyType: 'decimal' }
+  decimal:  { value: '.', keyType: 'decimal' },
+  OPS_REGEX: /[-()\+\-*\/]/g
 });

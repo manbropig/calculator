@@ -1,9 +1,10 @@
-app.factory('Calculator', [function() {
+app.factory('Calculator', ['Symbols', function(Symbols) {
 
   function Calculator() {
     this.nextOp = null;
-    this.currentNumber = '';
-    this.currentCalculation = null;
+    this.currNum = '';
+    this.currCalc = '';
+    this.newNumberPhase = true;
   }
 
   Calculator.prototype.process = function(key) {
@@ -21,24 +22,37 @@ app.factory('Calculator', [function() {
   }
 
   Calculator.prototype.processNumber = function(number) {
-    this.currentNumber += number;
-    console.log(this.currentNumber);
-    return this.currentNumber;
+    this.currNum = this.newNumberPhase ? number : this.currNumber + number;
+    this.currCalc += number;
+    this.newNumberPhase = false;
+    return this.currNum;
   }
 
   Calculator.prototype.processOp = function(op) {
-    var result;
-    if (op === '=') { //calculate currentCalculation
-      this.currentCalculation += this.currentNumber;
-      this.currentCalculation = this.currentCalculation.replace(/x/g, '*');
-      this.currentNumber = eval(this.currentCalculation.replace(/[^-()\d\/*+.]/g, ''));
-      this.currentCalculation = this.currentNumber;
-    } else {
-      this.nextOp = op;
-      this.currentCalculation = this.currentNumber + op;
-      this.currentNumber = '';
+    this.newNumberPhase = true;
+    this.nextOp = op;
+    if (op !== '=') {
+      var match = Symbols.OPS_REGEX.exec(this.currCalc);
+      if (match) { //check if currCalc already has an ops sign in it
+
+        if (match.index === this.currCalc.length - 1) {
+          this.currCalc = this.currCalc.substr(0, this.currCalc.length - 1) + op;
+        } else {
+          this.currNum = eval(this.currCalc); //turn 3+2+1
+          this.currCalc = this.currNum + op;  //into 5+1
+          return this.currNum; //return 5
+        }
+      } else {
+        this.currCalc = this.currNum + op;
+      }
     }
-    return this.currentNumber;
+    this.currCalc = this.currCalc.toString().replace(/x/g, '*').replace(/[^-()\d\/*+.]/g, '');
+    try { //try to do a calculation
+      this.currNum = eval(this.currCalc);
+    } catch (e) {
+      this.currNum = '';
+    }
+    return this.currNum;
   }
 
   Calculator.prototype.processMod = function() {
