@@ -4,20 +4,20 @@ describe('Factory: Calculator', function() {
   beforeEach(module('CalculatorApp'));
 
   var Calculator;
+  var calculator;
   beforeEach(inject(function(_Calculator_) {
     Calculator = _Calculator_;
   }));
 
-  it('exists', function() {
-    expect(new Calculator()).not.toBe(null);
+  beforeEach(function() {
+    calculator = new Calculator();
   });
 
+  it('exists', function() {
+    expect(calculator).not.toBe(null);
+  });
 
   describe('Input numbers', function() {
-    var calculator;
-    beforeEach(function() {
-      calculator = new Calculator();
-    });
 
     it('initializes with newNumberPhase as true', function() {
       expect(calculator.newNumberPhase).toBeTruthy();
@@ -42,31 +42,14 @@ describe('Factory: Calculator', function() {
   });
 
   describe('Operations', function() {
-    var calculator;
-    beforeEach(function() {
-      calculator = new Calculator();
-    });
 
     sharedExample('operation', function(opts) {
-      it('inputs the first number correctly', function() {
-        calculator.process({value: opts.num1, keyType: 'number'});
-        expect(calculator.currNum).toEqual(opts.num1);
-      });
 
       it('inputs the operation correctly', function() {
         calculator.process({value: opts.num1, keyType: 'number'});
         calculator.process({value: opts.op, keyType: 'operation'});
         opts.op = opts.op === 'x' ? '*' : opts.op;
         expect(calculator.currCalc).toEqual(opts.num1 + opts.op);
-      });
-
-      it('inputs the second number correctly', function() {
-        calculator.process({value: opts.num1, keyType: 'number'});
-        calculator.process({value: opts.op, keyType: 'operation'});
-        calculator.process({value: opts.num2, keyType: 'number'});
-        opts.op = opts.op === 'x' ? '*' : opts.op;
-        expect(calculator.currNum).toEqual(opts.num2);
-        expect(calculator.currCalc).toEqual(opts.num1 + opts.op + opts.num2);
       });
 
       it('inputs the = correctly', function() {
@@ -79,17 +62,19 @@ describe('Factory: Calculator', function() {
         expect(calculator.currCalc).toEqual(opts.num1 + opts.op + opts.num2);
       });
 
-      it('inputs another operation correctly', function() {
+      it('inputs the = correctly for decimal inputs', function() {
         calculator.process({value: opts.num1, keyType: 'number'});
+        calculator.process({value: '.', keyType: 'decimal'});
+        calculator.process({value: '0', keyType: 'number'});
         calculator.process({value: opts.op, keyType: 'operation'});
         calculator.process({value: opts.num2, keyType: 'number'});
-        calculator.process({value: '+', keyType: 'operation'});
+        calculator.process({value: '=', keyType: 'operation'});
         opts.op = opts.op === 'x' ? '*' : opts.op;
         expect(calculator.currNum).toEqual(opts.expectedOutput);
-        expect(calculator.currCalc).toEqual(opts.expectedOutput + '+');
+        expect(calculator.currCalc).toEqual(opts.num1 + '.0' + opts.op + opts.num2);
       });
 
-      it('applies the next operation correctly', function() {
+      it('inputs another operation correctly', function() {
         calculator.process({value: opts.num1, keyType: 'number'});
         calculator.process({value: opts.op, keyType: 'operation'});
         calculator.process({value: opts.num2, keyType: 'number'});
@@ -104,6 +89,20 @@ describe('Factory: Calculator', function() {
     itBehavesLike('operation', { num1: '2',  op: '-', num2: '3', expectedOutput: -1 });
     itBehavesLike('operation', { num1: '2',  op: 'x', num2: '3', expectedOutput: 6  });
     itBehavesLike('operation', { num1: '12', op: '/', num2: '3', expectedOutput: 4  });
+  });
 
+  describe('Modifiers', function() {
+
+    describe('AC', function() {
+      
+      it('resets the calculator', function() {
+        calculator.process({value: '2', keyType: 'number'});
+        calculator.process({value: 'AC', keyType: 'modifier'});
+        expect(calculator.currNum).toEqual('');
+        expect(calculator.currCalc).toEqual('');
+        expect(calculator.lastCalc).toBeNull();
+        expect(calculator.newNumberPhase).toEqual(true);
+      });
+    });
   });
 });
