@@ -57,6 +57,7 @@ There are some parts we still have yet to implement such as:
    * listen for ng-keypress
    * create a 'key' based on the key that was pressed
    * call calculator.process(key), where 'key' is the key that was created from the key that was pressed
+   * This should be relatively straightforward since all of the logic is in the Calculator Class.
 
 
 * Division by 0 currently returns 'infinity' while the iOS app will return 'Not a number'.
