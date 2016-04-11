@@ -5,6 +5,7 @@ app.factory('Calculator', ['Symbols', function(Symbols) {
     this.currCalc = '';
     this.lastCalc = null;
     this.newNumberPhase = true;
+    this.allClearFlag = true; //if true => AC else C
   }
 
   Calculator.prototype.process = function(key) {
@@ -25,10 +26,12 @@ app.factory('Calculator', ['Symbols', function(Symbols) {
     this.currNum = this.newNumberPhase ? number : this.currNum + number;
     this.currCalc += number;
     this.newNumberPhase = false;
+    this.allClearFlag = false;
     return this.currNum;
   }
 
   Calculator.prototype.processDecimal = function() {
+    this.allClearFlag = false;
     if (this.newNumberPhase) {
       this.newNumberPhase = false;
       this.currNum = '0.';
@@ -47,9 +50,9 @@ app.factory('Calculator', ['Symbols', function(Symbols) {
   //TODO: make this less hard to read!
   Calculator.prototype.processOp = function(op) {
     this.newNumberPhase = true;
+    this.currCalc = this.currCalc.toString();
     Symbols.OPS_REGEX.lastIndex = 0; //reset regex
     var match = Symbols.OPS_REGEX.exec(this.currCalc);
-    this.currCalc = this.currCalc.toString();
 
     if (op !== '=') {
       op = (op === 'x') ? '*' : op;
@@ -59,8 +62,12 @@ app.factory('Calculator', ['Symbols', function(Symbols) {
         if (match.index === this.currCalc.length - 1) {
           this.currCalc = this.currCalc.substr(0, this.currCalc.length - 1) + op;
         } else {
-          this.currNum = eval(this.currCalc); //turn 3+2+1
-          this.currCalc = this.currNum + op;  //into 5+1
+          try {
+            this.currNum = eval(this.currCalc); //turn 3+2+1
+            this.currCalc = this.currNum + op;  //into 5+1
+          } catch(e) {
+            this.currNum = '';
+          }
           return this.currNum; //return 5
         }
 
@@ -73,7 +80,9 @@ app.factory('Calculator', ['Symbols', function(Symbols) {
       if (this.lastCalc) {
         this.currCalc = this.currNum + this.lastCalc;
       } else { //split currCalc from regex match
-        this.lastCalc = this.currCalc.substr(this.currCalc.indexOf(match[0]), this.currCalc.length - 1);
+        if (match) {
+          this.lastCalc = this.currCalc.substr(this.currCalc.indexOf(match[0]), this.currCalc.length - 1);
+        }
       }
 
     }
@@ -89,9 +98,7 @@ app.factory('Calculator', ['Symbols', function(Symbols) {
   Calculator.prototype.processMod = function(mod) {
     var result;
     if (mod === 'AC') {
-      result = this.allClear();
-    } else if (mod === 'C') {
-      result = this.clear();
+      result = this.clearCalc();
     } else if (mod === '+/-') {
       result = this.negate();
     } else { //%
@@ -101,16 +108,40 @@ app.factory('Calculator', ['Symbols', function(Symbols) {
   }
 
   Calculator.prototype.negate = function() {
+    var old = this.currNum;
     this.currNum *= (-1);
-    this.currCalc = this.currNum;
+    if (this.currCalc.toString().indexOf(old) === -1) {
+      this.currCalc = this.currNum;
+    } else {
+      this.currCalc = this.currCalc.toString().replace(old, '(' + this.currNum.toString() + ')');
+    }
     return this.currNum;
   }
+
   Calculator.prototype.percent = function() {
     this.currNum /= 100;
     this.currCalc = this.currNum;
     return this.currNum;
   }
-  Calculator.prototype.clear = function() {}
+
+  Calculator.prototype.clearCalc = function() {
+    if (this.allClearFlag) {
+      return this.allClear();
+    } else {
+      this.allClearFlag = true; //next time will allClear()
+      Symbols.OPS_REGEX.lastIndex = 0; //reset regex
+      var match = Symbols.OPS_REGEX.exec(this.currCalc);
+      if (match && match.index !== this.currCalc.toString().length - 1) {
+        var parts = this.currCalc.toString().split(match[0]);
+        this.currCalc = parts[0] + ((parts[1]) ? match[0] : '');
+      } else {
+        this.currNum = '0';
+        this.currCalc = this.currNum;
+      }
+      this.newNumberPhase = true;
+      return '0';
+    }
+  }
   Calculator.prototype.allClear = function() {
     Calculator.call(this);
     return 0;

@@ -24,12 +24,8 @@ app.directive('webCalc', ['Calculator', 'Symbols', function(Calculator, Symbols)
         var result = calculator.process(key);
         scope.monitorValue = (result === '') ? scope.monitorValue : result;
         scope.monitorValue = scope.monitorValue.toString();
+        scope.$broadcast('key.change', calculator.allClearFlag ? 'AC' : 'C');
 
-        if (key.keyType === 'number') {
-          scope.$broadcast('key.change', 'C');
-        } else if (key.value === 'AC') {
-          scope.$broadcast('key.change', 'AC');
-        }
       });
 
       //decrease font size for large numbers
