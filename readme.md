@@ -1,6 +1,6 @@
 # Angular Calculator
 
-To run this application, ensure you have grunt-cli installed globally and then run `npm install` in the root directory of the project.
+To run this application, ensure that you have grunt-cli installed globally (to install it run `npm install -g grunt-cli`) and then run `npm install` in the root directory of the project.
 
 Once that is complete, you can type `grunt` into the terminal and navigate to localhost:8080 in your browser to see the calculator running.
 
