@@ -5,11 +5,6 @@ app.directive('webCalc', ['Calculator', 'Symbols', function(Calculator, Symbols)
     templateUrl: 'app/templates/directives/calculator.html',
     scope: {},
     link: function(scope, elem, attrs) {
-      /*  things to remember:
-        * smaller font size as numbers get large
-        * AC/C button
-        * = button repeats last op √
-      */
       var calculator = new Calculator();
       var defaultFontSize = 42;
       scope.monitorStyle = { 'font-size': defaultFontSize + 'px' };
