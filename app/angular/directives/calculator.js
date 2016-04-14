@@ -48,7 +48,6 @@ app.directive('webCalc', ['Calculator', 'Symbols', 'APIService', function(Calcul
           }
         }
 
-        console.log(key);
         return key;
       }
 
