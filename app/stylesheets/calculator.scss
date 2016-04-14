@@ -1,16 +1,26 @@
 $whole-width: 240px;
 $button-width: $whole-width / 4;
 $button-height: 47px;
+$border-color: #8E8E8E;
 
 body {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 300;
 }
 
+@mixin active-op {
+  background-color: darken(#E99748, 15%);
+  color: #8E8E8E;
+}
+
+@mixin active-key {
+  background-color: darken(#E0E1E0, 15%);
+}
+
 @mixin key {
   display: inline-block;
-  border-right: 1px solid #8E8E8E;
-  border-bottom: 1px solid #8E8E8E;
+  border-right: 1px solid $border-color;
+  border-bottom: 1px solid $border-color;
   width: $button-width - 1;
   height: $button-height;
   line-height: $button-height;
@@ -31,6 +41,7 @@ body {
     border-top-right-radius: 8px;
     border-top-left-radius: 8px;
     color: #FFF;
+    border-left: solid 1px $border-color;
 
     .value {
       position: absolute;
@@ -41,7 +52,7 @@ body {
 
   .keyboard {
     width: 100%;
-
+    border-left: solid 1px $border-color;
     .main-keyboard {
       display: inline-block;
       width: ($whole-width / 4) * 3;
@@ -53,8 +64,8 @@ body {
         &.long-key {
           width: ($button-width * 2) - 1;
         }
-        &:active {
-          background-color: darken(#E0E1E0, 15%);
+        &:active, &.pressed {
+          @include active-key;
         }
       }
 
@@ -68,9 +79,13 @@ body {
       .key {
         @include key;
         background-color: #e97607;
-        &:active {
-          background-color: darken(#E99748, 15%);
-          color: #8E8E8E;
+        &:active, &.pressed {
+          @include active-op;
+          @include active-op;
+        }
+
+        &.selected {
+          border: 1px solid #7B7B7B;
         }
       }
     }

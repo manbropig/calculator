@@ -1,4 +1,4 @@
-<div class="calculator">
+<div class="calculator" tabindex="0" ng-keydown="restyle($event)" ng-keyup="sendKey($event)">
   <div class="monitor">
     <span class="value" ng-style="monitorStyle">{{monitorValue}}</span>
   </div>

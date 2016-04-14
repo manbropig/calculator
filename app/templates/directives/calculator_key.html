@@ -1,4 +1,7 @@
-<div class="key" ng-switch="key.keyType" ng-click="keyClicked(key)">
+<div class="key"
+  ng-switch="key.keyType"
+  ng-click="keyClicked(key)"
+  ng-class="{ 'pressed': isPressed, 'selected': isSelected }">
   <span ng-switch-when="number">{{key.value}}</span>
   <span ng-switch-when="decimal">.</span>
   <span ng-switch-when="modifier" ng-bind-html="display"></span>

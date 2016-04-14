@@ -23,6 +23,7 @@ app.factory('Calculator', ['Symbols', function(Symbols) {
   }
 
   Calculator.prototype.processNumber = function(number) {
+    this.currNum = this.currNum.toString();
     this.currNum = this.newNumberPhase ? number : this.currNum + number;
     this.currCalc += number;
     this.newNumberPhase = false;

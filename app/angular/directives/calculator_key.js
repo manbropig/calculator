@@ -9,6 +9,8 @@ app.directive('calculatorKey', ['$sce', 'Symbols', function($sce, Symbols) {
     link: function(scope, elem, attrs) {
       //directive can be used for only display and allow the main controller to
       //just watch for any clicks to reduce the number of watchers.
+      scope.isPressed = false;
+      scope.isSelected = false; //only relevant for ops keys
 
       if (scope.key.keyType === 'modifier') {
         scope.display = {
@@ -35,6 +37,41 @@ app.directive('calculatorKey', ['$sce', 'Symbols', function($sce, Symbols) {
 
       scope.keyClicked = function(key) {
         scope.$emit('clicked', key);
+      }
+
+      if (scope.key.keyType === 'operation') {
+        scope.$on('key.pressed', opKeyPressed);
+        scope.$on('key.release', opKeyReleased);
+      } else {
+        scope.$on('key.pressed', regularKeyPressed);
+        scope.$on('key.release', regularKeyReleased);
+      }
+
+      function opKeyPressed(event, key) {
+        scope.isSelected = false;
+
+        if (key.value == scope.key.value) {
+          scope.isPressed  = true;
+          scope.isSelected = true;
+        }
+      }
+
+      function opKeyReleased(event, key) {
+        if (key.value == scope.key.value) {
+          scope.isPressed  = false;
+        }
+      }
+
+      function regularKeyReleased(event, key) {
+        if (key.value == scope.key.value) {
+          scope.isPressed = false;
+        }
+      }
+
+      function regularKeyPressed(event, key) {
+        if (key.value == scope.key.value) {
+          scope.isPressed = true;
+        }
       }
 
       if (scope.key.value === '0') {
